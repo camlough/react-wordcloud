@@ -1,5 +1,5 @@
 {
-  "name": "react-wordcloud",
+  "name": "camlough-react-wordcloud",
   "version": "1.1.1",
   "description": "Simple React + D3 wordcloud component with powerful features.",
   "main": "dist/index.js",
