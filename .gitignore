@@ -13,3 +13,6 @@ node_modules
 # project
 dist
 .docz
+
+# ide
+.idea
