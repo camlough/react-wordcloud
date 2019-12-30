@@ -1,6 +1,6 @@
 import { descending } from 'd3-array';
 import cloud from 'd3-cloud';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import seedrandom from 'seedrandom';
 
 import { useResponsiveSVGSelection } from './hooks';
@@ -8,8 +8,9 @@ import render from './render';
 import * as types from './types';
 import { getDefaultColors, getFontScale, getText, rotate } from './utils';
 
-const MAX_LAYOUT_ATTEMPTS = 10;
+const MAX_LAYOUT_ATTEMPTS = 5;
 const SHRINK_FACTOR = 0.95;
+const WORD_SHRINK_FACTOR = 0.75;
 
 export * from './types';
 
@@ -67,8 +68,12 @@ export default function Wordcloud({
   size: initialSize,
   words,
 }: Props): JSX.Element {
-  const mergedCallbacks = { ...defaultCallbacks, ...callbacks };
-  const mergedOptions = { ...defaultOptions, ...options };
+  // without useMemo the component re-renders on every upstream change
+  // because of the creation of new mergedCallbacks and mergedOptions variables
+  const mergedCallbacks = useMemo(() => {return { ...defaultCallbacks, ...callbacks }}, []);
+  const mergedOptions = useMemo(() => {return { ...defaultOptions, ...options }}, []);
+  // const mergedCallbacks = callbacks;
+  // const mergedOptions = options;
 
   const [ref, selection, size] = useResponsiveSVGSelection(
     minSize,
@@ -100,7 +105,6 @@ export default function Wordcloud({
       const layout = cloud()
         .size(size)
         .padding(padding)
-        .words(sortedWords)
         .rotate(() => {
           if (rotations === undefined) {
             // default rotation algorithm
@@ -116,11 +120,15 @@ export default function Wordcloud({
         .fontStyle(fontStyle)
         .fontWeight(fontWeight);
 
-      const draw = (fontSizes: types.MinMaxPair, attempts = 1): void => {
+      const draw = (fontSizes: types.MinMaxPair, words: types.Word[], attempts = 1): void => {
         layout
+          .words(words)
           .fontSize((word: types.Word) => {
-            const fontScale = getFontScale(sortedWords, fontSizes, scale);
-            return fontScale(word.value);
+            // const fontScale = getFontScale(sortedWords, fontSizes, scale);
+            // return fontScale(word.value);
+
+            // just returning the value because we apply our own font scaling ahead of time
+            return word.value;
           })
           .on('end', (computedWords: types.Word[]) => {
             /** KNOWN ISSUE: https://github.com/jasondavies/d3-cloud/issues/36
@@ -142,7 +150,23 @@ export default function Wordcloud({
                 fontSizes[1] * SHRINK_FACTOR,
                 minFontSize,
               );
-              draw([minFontSize, maxFontSize], attempts + 1);
+
+              const computedWordsMap = computedWords.reduce((acc, word) => {
+                return {
+                  ...acc,
+                  [word.text]: true
+                }
+              }, {});
+
+              // scale down the words that were not placed
+              const scaledWords = sortedWords.map(word => {
+                if(!computedWordsMap[word.text]){
+                  word.value = ~~(word.value * WORD_SHRINK_FACTOR);
+                }
+                return word;
+              });
+
+              draw([minFontSize, maxFontSize], scaledWords, attempts + 1);
             } else {
               render(
                 selection,
@@ -155,8 +179,7 @@ export default function Wordcloud({
           })
           .start();
       };
-
-      draw(fontSizes);
+      draw(fontSizes, sortedWords);
     }
   }, [maxWords, mergedCallbacks, mergedOptions, selection, size, words]);
 

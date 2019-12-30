@@ -30,7 +30,7 @@ export interface Callbacks {
   /**
    * Set the word color using the word datum.
    */
-  getWordColor?: (word: Word) => string;
+  getWordColor?: (word: Word, index: Number) => string;
   /**
    * Set the word tooltip using the word datum.
    */
@@ -47,6 +47,10 @@ export interface Callbacks {
    * Capture the word and mouse event on mouse over.
    */
   onWordMouseOver?: (word: Word, event?: MouseEvent) => void;
+  /**
+   * Called when word cloud is done rendering.
+   */
+  onRenderComplete?: () => void;
 }
 export type CallbacksProp = Optional<Callbacks>;
 

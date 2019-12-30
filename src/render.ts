@@ -21,12 +21,13 @@ export default function render(
     onWordClick,
     onWordMouseOver,
     onWordMouseOut,
+    onRenderComplete
   } = callbacks;
   const { colors, enableTooltip, fontStyle, fontWeight } = options;
   const { fontFamily, transitionDuration } = options;
 
-  function getFill(word: Word): string {
-    return getWordColor ? getWordColor(word) : choose(colors, random);
+  function getFill(word: Word, index: Number): string {
+    return getWordColor ? getWordColor(word, index) : choose(colors, random);
   }
 
   // load words
@@ -92,4 +93,7 @@ export default function render(
         .remove();
     },
   );
+  if(onRenderComplete){
+    onRenderComplete();
+  }
 }
