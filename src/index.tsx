@@ -1,5 +1,7 @@
+// @ts-nocheck
 import { descending } from 'd3-array';
-import cloud from 'd3-cloud';
+// import cloud from 'd3-cloud';
+import cloud from './d3-cloud';
 import React, { useEffect, useRef, useMemo } from 'react';
 import seedrandom from 'seedrandom';
 
