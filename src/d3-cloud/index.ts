@@ -178,7 +178,9 @@ export default function() {
           for (var j = 0; j < h; j++) {
             last = 0;
             for (var i = 0; i <= w; i++) {
-              board[x + i] |= (last << msx) | (i < w ? (last = sprite[j * w + i]) >>> sx : 0);
+              if(sprite){
+                board[x + i] |= (last << msx) | (i < w ? (last = sprite[j * w + i]) >>> sx : 0);
+              }
             }
             x += sw;
           }
@@ -373,7 +375,7 @@ function cloudCollide(tag, board, sw) {
   for (var j = 0; j < h; j++) {
     last = 0;
     for (var i = 0; i <= w; i++) {
-      if (((last << msx) | (i < w ? (last = sprite[j * w + i]) >>> sx : 0))
+      if (sprite && ((last << msx) | (i < w ? (last = sprite[j * w + i]) >>> sx : 0))
         & board[x + i]) return true;
     }
     x += sw;
