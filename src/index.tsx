@@ -94,6 +94,8 @@ export default function Wordcloud({
         rotations,
         rotationAngles,
         spiral,
+        stepLimit,
+        timeInterval,
         scale,
       } = mergedOptions;
 
@@ -116,6 +118,8 @@ export default function Wordcloud({
           }
         })
         .spiral(spiral)
+        .stepLimit(stepLimit)
+        .timeInterval(timeInterval)
         .random(random)
         .text(getText)
         .font(fontFamily)

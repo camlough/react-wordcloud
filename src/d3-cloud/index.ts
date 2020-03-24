@@ -20,7 +20,7 @@ export default function() {
     spiral = archimedeanSpiral,
     words = [],
     timeInterval = Infinity,
-    stepLimit = 5000,
+    stepLimit = Infinity,
     event = dispatch("word", "end"),
     timer = null,
     random = Math.random,
@@ -194,6 +194,10 @@ export default function() {
 
   cloud.timeInterval = function(_) {
     return arguments.length ? (timeInterval = _ == null ? Infinity : _, cloud) : timeInterval;
+  };
+
+  cloud.stepLimit = function(_) {
+    return arguments.length ? (stepLimit = _ == null ? Infinity : _, cloud) : stepLimit;
   };
 
   cloud.words = function(_) {
