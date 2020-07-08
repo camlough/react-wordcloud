@@ -99,7 +99,7 @@ export default function() {
             // decrement the size and try again
             if(maxSizeToFit < d.size) {
               d.size = maxSizeToFit;
-            } else if((nsi <= data.length) && data[nsi] && (data[nsi].size < d.size)) {
+            } else if((nsi <= data.length) && (data[nsi].size < d.size)) {
               d.size = data[nsi++].size;
             } else {
               shifted = d.size >> 3;

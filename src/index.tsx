@@ -10,7 +10,7 @@ import render from './render';
 import * as types from './types';
 import { getDefaultColors, getFontScale, getText, rotate } from './utils';
 
-const MAX_LAYOUT_ATTEMPTS = 5;
+const MAX_LAYOUT_ATTEMPTS = 1;
 const SHRINK_FACTOR = 0.95;
 const WORD_SHRINK_FACTOR = 0.75;
 
