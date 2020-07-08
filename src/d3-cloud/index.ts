@@ -54,7 +54,7 @@ export default function() {
 
     if (timer) clearInterval(timer);
     timer = setInterval(step, 0);
-    step();
+    setTimeout(() => step(), 0);
 
     return cloud;
 
