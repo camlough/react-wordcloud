@@ -96,6 +96,10 @@ export default function() {
             d.x = x;
             d.y = y;
 
+            if(data[nsi] === undefined){
+              break;
+            }
+
             // decrement the size and try again
             if(maxSizeToFit < d.size) {
               d.size = maxSizeToFit;
