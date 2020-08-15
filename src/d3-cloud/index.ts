@@ -96,14 +96,14 @@ export default function() {
             d.x = x;
             d.y = y;
 
-            if(data[nsi] === undefined){
-              break;
-            }
-
             // decrement the size and try again
             if(maxSizeToFit < d.size) {
               d.size = maxSizeToFit;
-            } else if((nsi <= data.length) && (data[nsi].size < d.size)) {
+            }
+            // else if(data[nsi] === undefined) {
+            //   break;
+            // }
+            else if((nsi <= data.length) && (data[nsi].size < d.size)) {
               d.size = data[nsi++].size;
             } else {
               shifted = d.size >> 3;

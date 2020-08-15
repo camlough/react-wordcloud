@@ -74,8 +74,6 @@ export default function Wordcloud({
   // because of the creation of new mergedCallbacks and mergedOptions variables
   const mergedCallbacks = useMemo(() => {return { ...defaultCallbacks, ...callbacks }}, []);
   const mergedOptions = useMemo(() => {return { ...defaultOptions, ...options }}, []);
-  // const mergedCallbacks = callbacks;
-  // const mergedOptions = options;
 
   const [ref, selection, size] = useResponsiveSVGSelection(
     minSize,
@@ -124,64 +122,25 @@ export default function Wordcloud({
         .text(getText)
         .font(fontFamily)
         .fontStyle(fontStyle)
-        .fontWeight(fontWeight);
+        .fontWeight(fontWeight)
+        .stepLimit(stepLimit)
+        .timeInterval(timeInterval);
 
       const draw = (fontSizes: types.MinMaxPair, words: types.Word[], attempts = 1): void => {
         layout
           .words(words)
           .fontSize((word: types.Word) => {
-            // const fontScale = getFontScale(sortedWords, fontSizes, scale);
-            // return fontScale(word.value);
-
             // just returning the value because we apply our own font scaling ahead of time
             return word.value;
           })
           .on('end', (computedWords: types.Word[]) => {
-            /** KNOWN ISSUE: https://github.com/jasondavies/d3-cloud/issues/36
-             * Recursively layout and decrease font-sizes by a SHRINK_FACTOR.
-             * Bail out with a warning message after MAX_LAYOUT_ATTEMPTS.
-             */
-            if (
-              sortedWords.length !== computedWords.length &&
-              attempts <= MAX_LAYOUT_ATTEMPTS
-            ) {
-              if (attempts === MAX_LAYOUT_ATTEMPTS) {
-                console.warn(
-                  `Unable to layout ${sortedWords.length -
-                    computedWords.length} word(s) after ${attempts} attempts.  Consider: (1) Increasing the container/component size. (2) Lowering the max font size. (3) Limiting the rotation angles.`,
-                );
-              }
-              const minFontSize = Math.max(fontSizes[0] * SHRINK_FACTOR, 1);
-              const maxFontSize = Math.max(
-                fontSizes[1] * SHRINK_FACTOR,
-                minFontSize,
-              );
-
-              const computedWordsMap = computedWords.reduce((acc, word) => {
-                return {
-                  ...acc,
-                  [word.text]: true
-                }
-              }, {});
-
-              // scale down the words that were not placed
-              const scaledWords = sortedWords.map(word => {
-                if(!computedWordsMap[word.text]){
-                  word.value = ~~(word.value * WORD_SHRINK_FACTOR);
-                }
-                return word;
-              });
-
-              draw([minFontSize, maxFontSize], scaledWords, attempts + 1);
-            } else {
-              render(
-                selection,
-                computedWords,
-                mergedOptions,
-                mergedCallbacks,
-                random,
-              );
-            }
+            render(
+              selection,
+              computedWords,
+              mergedOptions,
+              mergedCallbacks,
+              random,
+            );
           })
           .start();
       };
