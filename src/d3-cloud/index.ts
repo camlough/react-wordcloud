@@ -100,9 +100,9 @@ export default function() {
             if(maxSizeToFit < d.size) {
               d.size = maxSizeToFit;
             }
-            // else if(data[nsi] === undefined) {
-            //   break;
-            // }
+            else if(data[nsi] === undefined) {
+              break;
+            }
             else if((nsi <= data.length) && (data[nsi].size < d.size)) {
               d.size = data[nsi++].size;
             } else {
