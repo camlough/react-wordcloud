@@ -87,9 +87,6 @@ export default function render(
     },
     exit => {
       exit
-        .transition()
-        .duration(transitionDuration)
-        .attr('fill-opacity', 0)
         .remove();
     },
   );
